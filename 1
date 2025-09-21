@@ -1,91 +1,81 @@
-#include <stdio.h>
-#include <string.h>   // use this instead of conio.h
-#define N strlen(g)
-
-char t[28], cs[28], g[28];
-int a, e, c, b;
-
-void xor() {
-    for (c = 1; c < N; c++)
-        cs[c] = ((cs[c] == g[c]) ? '0' : '1');
-}
-
-void crc() {
-    for (e = 0; e < N; e++)
-        cs[e] = t[e];
-
-    do {
-        if (cs[0] == '1')
-            xor();
-        for (c = 0; c < N - 1; c++)
-            cs[c] = cs[c + 1];
-        cs[c] = t[e + 1];
-        e++;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Screen Navigation Example</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
     }
-    while (e <= a + N - 1);   // ✅ fixed missing ;
-}
 
-int main() {
-    int flag = 0;
-    do {
-        printf("\n1.crc12\n2.crc18\n3.ccip\n4.exit\nenter your option: ");
-        scanf("%d", &b);
-
-        switch (b) {
-            case 1: strcpy(g, "1100000001111"); break;
-            case 2: strcpy(g, "11000000000000101"); break;
-            case 3: strcpy(g, "10001000000100001"); break;
-            case 4: return 0;
-        }
-
-        printf("\nenter data: ");
-        scanf("%s", t);
-
-        printf("\n\n");
-        printf("\ngenerating polynomial: %s", g);
-
-        a = strlen(t);
-        for (e = a; e < a + N - 1; e++)
-            t[e] = '0';
-        t[e] = '\0';   // ✅ add null terminator
-
-        crc();
-        printf("\nchecksum is %s", cs);
-
-        for (e = a; e < a + N - 1; e++)
-            t[e] = cs[e - a];
-        t[e] = '\0';   // ✅ add null terminator
-
-        printf("\n\n");
-        printf("\nfinal code word is %s", t);
-        printf("\n\n");
-
-        printf("\ntest error detection (yes=0) no(1)?:");
-        scanf("%d", &e);
-
-        if (e == 0) {
-            do {
-                printf("\nenter the position where error is to be inserted:");
-                scanf("%d", &e);   // ✅ fixed missing ;
-            }
-            while (e == 0 || e > a + N - 1);
-
-            t[e - 1] = (t[e - 1] == '0') ? '1' : '0';
-            printf("\n\n");
-            printf("\nerroneous data :%s\n", t);
-        }
-
-        crc();
-        for (e = 0; (e < N - 1) && (cs[e] != '1'); e++);
-
-        if (e < N - 1)
-            printf("\nerror detected\n\n");
-        else
-            printf("\nno error detected\n\n");
-
-        printf("\n");
+    header {
+      background-color: #333;
+      color: #fff;
+      text-align: center;
+      padding: 1em;
     }
-    while (flag != 1);
 
-    return 0;
-}
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    section {
+      display: none;
+    }
+
+    section.active {
+      display: block;
+    }
+
+    footer {
+      background-color: #333;
+      color: #fff;
+      text-align: center;
+      padding: 1em;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="jumbotron text-center">
+    <h1>Screen Navigation Example</h1>
+  </header>
+
+  <main>
+    <section id="home" class="active">
+      <h2>Home Screen</h2>
+      <p>Welcome to the Home Screen.</p>
+      <button onclick="navigateTo('about')">Go to About</button>
+    </section>
+
+    <section id="about">
+      <h2>About Screen</h2>
+      <p>This is the About Screen.</p>
+      <button onclick="navigateTo('home')">Go to Home</button>
+    </section>
+  </main>
+
+  <footer>
+    &copy; 2024 Your Company Name
+  </footer>
+
+  <script>
+    function navigateTo(screenId) {
+      document.querySelectorAll('section').forEach(section => {
+        section.classList.remove('active');
+      });
+      document.getElementById(screenId).classList.add('active');
+    }
+  </script>
+
+</body>
+</html>
